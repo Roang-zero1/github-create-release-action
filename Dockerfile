@@ -1,6 +1,6 @@
 FROM alpine:3.9 as base
 
-LABEL "com.github.actions.name"="GitHub Create Release"
+LABEL "com.github.actions.name"="GitHub Create Tag Release"
 LABEL "com.github.actions.description"="Create a GitHub release from a pushed Tag."
 LABEL "com.github.actions.icon"="zap"
 LABEL "com.github.actions.color"="white"
