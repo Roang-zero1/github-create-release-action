@@ -5,7 +5,7 @@ workflow "Chech & Release" {
 
 action "Linter" {
   uses = "docker://cdssnc/docker-lint-github-action"
-  args = "--ignore DL3007"
+  args = "--ignore DL3007 --ignore DL3018"
 }
 
 action "shfmt" {
@@ -29,5 +29,13 @@ action "filter tag" {
 }
 
 action "release version" {
-  uses = "./"
+  uses = "Roang-zero1/github-create-release-action@master"
+  env = {
+    VERSION_REGEX = "^v[[:digit:]]+\\.[[:digit:]]+\\.[[:digit:]]+",
+    UPDATE_EXISTING = "y",
+  }
+  secrets = [
+    "GITHUB_TOKEN"
+  ]
+  needs = ["filter tag"]
 }
