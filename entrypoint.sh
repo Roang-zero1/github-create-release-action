@@ -53,34 +53,25 @@ HTTP_RESPONSE=$(curl --write-out "HTTPSTATUS:%{http_code}" \
 
 HTTP_STATUS=$(echo $HTTP_RESPONSE | tr -d '\n' | sed -e 's/.*HTTPSTATUS://')
 
-create_release_data
-echo $RELEASE_DATA | jq
 if [ $HTTP_STATUS -eq 200 ]; then
   echo "Release found"
-  #TODO: Update existing release
-fi
-
-echo $HTTP_STATUS
-exit 0
-if [ $HTTP_STATUS -eq 200 ]; then
-  echo "Release found"
-  RELEASE_DATA=$(echo $HTTP_RESPONSE | sed -e 's/HTTPSTATUS\:.*//g')
 else
   echo "Creating release"
+  create_release_data
   HTTP_RESPONSE=$(curl --write-out "HTTPSTATUS:%{http_code}" \
     -sSL \
     -H "${AUTH_HEADER}" \
     -H "Content-Type: application/json" \
-    -d "{\"tag_name\": \"${RELEASE_ID}\"}" \
+    -d "${RELEASE_DATA}" \
     "https://api.github.com/repos/${GITHUB_REPOSITORY}/releases")
 
   HTTP_STATUS=$(echo $HTTP_RESPONSE | tr -d '\n' | sed -e 's/.*HTTPSTATUS://')
 
   if [ $HTTP_STATUS -eq 201 ]; then
     echo "Release created"
-    RELEASE_DATA=$(echo $HTTP_RESPONSE | sed -e 's/HTTPSTATUS\:.*//g')
   else
-    echo "Failed to create release"
+    echo "Failed to create release ($HTTP_STATUS):"
+    echo $HTTP_RESPONSE | sed -e 's/HTTPSTATUS\:.*//g' | jq '.errors'
     exit 1
   fi
 fi
