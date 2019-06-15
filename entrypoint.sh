@@ -31,6 +31,10 @@ HTTP_STATUS=$(echo $HTTP_RESPONSE | tr -d '\n' | sed -e 's/.*HTTPSTATUS://')
 
 RELEASE_DATA="{}"
 RELEASE_DATA=$(echo ${RELEASE_DATA} | jq --arg tag $TAG '.tag_name = $tag')
+DRAFT=${DRAFT:-"y"}
+if [ "${DRAFT}" == "y" ]; then
+  RELEASE_DATA=$(echo ${RELEASE_DATA} | jq '.draft = true')
+fi
 echo $RELEASE_DATA | jq
 if [ $HTTP_STATUS -eq 200 ]; then
   echo "Release found"

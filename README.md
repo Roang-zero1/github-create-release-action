@@ -19,6 +19,7 @@ action "package mod" {
 ## Environment Variables
 
 * `VERSION_REGEX` Regular expression to verify that the version is in a correct format. Defaults to `.*` (accept everything).
+* `DRAFT` Create the releases as draft (`y|n [default: n]`). Existing will not be updated from released to draft.
 * `UPDATE_EXISTING` Controls whether an existing release should be updated with data from the latest push (`y|n [default: n]`).
 
 ## Secrets
