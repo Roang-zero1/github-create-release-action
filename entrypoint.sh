@@ -14,9 +14,7 @@ create_release_data() {
       RELEASE_DATA=$(echo ${RELEASE_DATA} | jq --arg body "${RELEASE_BODY}" '.body = $body')
     fi
   fi
-  local DRAFT_VALUE="false"
-  [[ ${DRAFT:-"n"} == "y" ]] && DRAFT_VALUE="true"
-  RELEASE_DATA=$(echo ${RELEASE_DATA} | jq --argjson value $DRAFT_VALUE '.draft = $value')
+  RELEASE_DATA=$(echo ${RELEASE_DATA} | jq --argjson value ${DRAFT:-"false"} '.draft = $value')
   PRERELEASE_REGEX=${PRERELEASE_REGEX:-""}
   local PRERELEASE_VALUE="false"
   if [ -n "${PRERELEASE_REGEX}" ]; then
@@ -36,8 +34,6 @@ fi
 
 V_REGEX=${VERSION_REGEX:-"^.*$"}
 
-echo $TAG
-
 if ! echo "${TAG}" | grep -qE "$V_REGEX"; then
   echo "Bad version in tag, needs to be adhere to the regex '$V_REGEX'" 1>&2
   exit 1
@@ -46,7 +42,7 @@ fi
 AUTH_HEADER="Authorization: token ${GITHUB_TOKEN}"
 RELEASE_ID=$TAG
 
-echo "Verifying release"
+echo "Starting release process for tag '$TAG'"
 HTTP_RESPONSE=$(curl --write-out "HTTPSTATUS:%{http_code}" \
   -sSL \
   -H "${AUTH_HEADER}" \
@@ -55,10 +51,10 @@ HTTP_RESPONSE=$(curl --write-out "HTTPSTATUS:%{http_code}" \
 HTTP_STATUS=$(echo $HTTP_RESPONSE | tr -d '\n' | sed -e 's/.*HTTPSTATUS://')
 
 if [ $HTTP_STATUS -eq 200 ]; then
-  echo "Release found"
+  echo "Existing release found"
 
   UPDATE_EXISTING=${UPDATE_EXISTING:-"n"}
-  if [ "${UPDATE_EXISTING}" == "y" ]; then
+  if [ "${UPDATE_EXISTING}" == "true" ]; then
     echo "Updating existing release"
     create_release_data
     RECEIVED_DATA=$(echo $HTTP_RESPONSE | sed -e 's/HTTPSTATUS\:.*//g')
@@ -83,11 +79,11 @@ if [ $HTTP_STATUS -eq 200 ]; then
       echo $HTTP_RESPONSE | sed -e 's/HTTPSTATUS\:.*//g' | jq '.errors'
       exit 1
     fi
+  else
+    echo "Updating disabled, finishing workflow"
   fi
-
-  #TODO: Update existing release
 else
-  echo "Creating release"
+  echo "Creating new release"
   create_release_data
   HTTP_RESPONSE=$(curl --write-out "HTTPSTATUS:%{http_code}" \
     -sSL \
@@ -99,7 +95,7 @@ else
   HTTP_STATUS=$(echo $HTTP_RESPONSE | tr -d '\n' | sed -e 's/.*HTTPSTATUS://')
 
   if [ $HTTP_STATUS -eq 201 ]; then
-    echo "Release created"
+    echo "Release successfully created"
   else
     echo "Failed to create release ($HTTP_STATUS):"
     echo $HTTP_RESPONSE | sed -e 's/HTTPSTATUS\:.*//g' | jq '.errors'

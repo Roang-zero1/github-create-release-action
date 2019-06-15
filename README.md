@@ -22,8 +22,8 @@ Regular expression below have to be in GNU grep extended regular expression form
 
 * `VERSION_REGEX` Regular expression to verify that the version is in a correct format. Defaults to `.*` (accept everything).
 * `PRERELEASE_REGEX` Any version matching this regular expression will be marked as pre-release. Disabled by default.
-* `DRAFT` Create the releases as draft (`y|n [default: n]`). Existing will not be updated from released to draft.
-* `UPDATE_EXISTING` Controls whether an existing release should be updated with data from the latest push (`y|n [default: n]`).
+* `DRAFT` Create the releases as draft (`true|false [default: false]`). Existing will not be updated from released to draft.
+* `UPDATE_EXISTING` Controls whether an existing release should be updated with data from the latest push (`true|false [default: false]`).
 * `CHANGELOG_FILE` File that contains the Markdown formatted changelog.
 * `CHANGELOG_HEADING` Heading level at which the tag headings exist.
 
