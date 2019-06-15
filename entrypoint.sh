@@ -14,16 +14,17 @@ create_release_data() {
       RELEASE_DATA=$(echo ${RELEASE_DATA} | jq --arg body "${RELEASE_BODY}" '.body = $body')
     fi
   fi
-  DRAFT=${DRAFT:-"n"}
-  if [ "${DRAFT}" == "y" ]; then
-    RELEASE_DATA=$(echo ${RELEASE_DATA} | jq '.draft = true')
-  fi
+  local DRAFT_VALUE="false"
+  [[ ${DRAFT:-"n"} == "y" ]] && DRAFT_VALUE="true"
+  RELEASE_DATA=$(echo ${RELEASE_DATA} | jq --argjson value $DRAFT_VALUE '.draft = $value')
   PRERELEASE_REGEX=${PRERELEASE_REGEX:-""}
+  local PRERELEASE_VALUE="false"
   if [ -n "${PRERELEASE_REGEX}" ]; then
     if echo "${TAG}" | grep -qE "$PRERELEASE_REGEX"; then
-      RELEASE_DATA=$(echo ${RELEASE_DATA} | jq '.prerelease = true')
+      PRERELEASE_VALUE="true"
     fi
   fi
+  RELEASE_DATA=$(echo ${RELEASE_DATA} | jq --argjson value $PRERELEASE_VALUE '.prerelease = $value')
 }
 
 TAG="$(echo ${GITHUB_REF} | grep tags | grep -o "[^/]*$" || true)"
