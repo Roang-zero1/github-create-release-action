@@ -31,7 +31,7 @@ HTTP_STATUS=$(echo $HTTP_RESPONSE | tr -d '\n' | sed -e 's/.*HTTPSTATUS://')
 
 RELEASE_DATA="{}"
 RELEASE_DATA=$(echo ${RELEASE_DATA} | jq --arg tag $TAG '.tag_name = $tag')
-DRAFT=${DRAFT:-"y"}
+DRAFT=${DRAFT:-"n"}
 if [ "${DRAFT}" == "y" ]; then
   RELEASE_DATA=$(echo ${RELEASE_DATA} | jq '.draft = true')
 fi
