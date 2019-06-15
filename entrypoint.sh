@@ -3,9 +3,17 @@
 set -euo pipefail
 
 create_release_data() {
+  local CHANGELOG_FILE=${CHANGELOG_FILE:-"CHANGELOG.md"}
+  local CHANGELOG_HEADING=${CHANGELOG_HEADING:-"h2"}
 
   RELEASE_DATA="{}"
   RELEASE_DATA=$(echo ${RELEASE_DATA} | jq --arg tag $TAG '.tag_name = $tag')
+  if [ -e ${CHANGELOG_FILE} ]; then
+    RELEASE_BODY=$(submark -O --$CHANGELOG_HEADING $TAG $CHANGELOG_FILE)
+    if [ -n "${RELEASE_BODY}" ]; then
+      RELEASE_DATA=$(echo ${RELEASE_DATA} | jq --arg body "${RELEASE_BODY}" '.body = $body')
+    fi
+  fi
   DRAFT=${DRAFT:-"n"}
   if [ "${DRAFT}" == "y" ]; then
     RELEASE_DATA=$(echo ${RELEASE_DATA} | jq '.draft = true')
