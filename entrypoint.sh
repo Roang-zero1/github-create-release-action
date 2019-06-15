@@ -56,6 +56,36 @@ HTTP_STATUS=$(echo $HTTP_RESPONSE | tr -d '\n' | sed -e 's/.*HTTPSTATUS://')
 
 if [ $HTTP_STATUS -eq 200 ]; then
   echo "Release found"
+
+  UPDATE_EXISTING=${UPDATE_EXISTING:-"n"}
+  if [ "${UPDATE_EXISTING}" == "y" ]; then
+    echo "Updating existing release"
+    create_release_data
+    RECEIVED_DATA=$(echo $HTTP_RESPONSE | sed -e 's/HTTPSTATUS\:.*//g')
+
+    RELEASE_DATA=$(echo $RELEASE_DATA | jq --argjson r_value $(echo $RECEIVED_DATA | jq '.draft') '.draft = if ( $r_value != true or .draft != true ) then false else true end ')
+    RELEASE_DATA=$(echo $RELEASE_DATA | jq --argjson r_value $(echo $RECEIVED_DATA | jq '.draft') '.draft = if ( $r_value != true or .draft != true ) then false else true end ')
+
+    HTTP_RESPONSE=$(curl --write-out "HTTPSTATUS:%{http_code}" \
+      -sSL \
+      -X PATCH \
+      -H "${AUTH_HEADER}" \
+      -H "Content-Type: application/json" \
+      -d "${RELEASE_DATA}" \
+      "$(echo ${RECEIVED_DATA} | jq -r '.url')")
+
+    HTTP_STATUS=$(echo $HTTP_RESPONSE | tr -d '\n' | sed -e 's/.*HTTPSTATUS://')
+
+    if [ $HTTP_STATUS -eq 200 ]; then
+      echo "Release updated"
+    else
+      echo "Failed to update release ($HTTP_STATUS):"
+      echo $HTTP_RESPONSE | sed -e 's/HTTPSTATUS\:.*//g' | jq '.errors'
+      exit 1
+    fi
+  fi
+
+  #TODO: Update existing release
 else
   echo "Creating release"
   create_release_data
