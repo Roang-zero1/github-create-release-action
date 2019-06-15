@@ -19,7 +19,7 @@ action "package mod" {
 ## Environment Variables
 
 * `VERSION_REGEX` Regular expression to verify that the version is in a correct format. Defaults to `.*` (accept everything).
-* `UPDATE_EXISTING` Controls whether an existing release should be updated with data from the latest push. `[y/n]` (defaults to: `n`)
+* `UPDATE_EXISTING` Controls whether an existing release should be updated with data from the latest push (`y|n [default: n]`).
 
 ## Secrets
 
