@@ -35,6 +35,12 @@ DRAFT=${DRAFT:-"y"}
 if [ "${DRAFT}" == "y" ]; then
   RELEASE_DATA=$(echo ${RELEASE_DATA} | jq '.draft = true')
 fi
+PRERELEASE_REGEX=${PRERELEASE_REGEX:-""}
+if [ -n "${PRERELEASE_REGEX}" ]; then
+  if echo "${TAG}" | grep -qE "$PRERELEASE_REGEX"; then
+    RELEASE_DATA=$(echo ${RELEASE_DATA} | jq '.prerelease = true')
+  fi
+fi
 echo $RELEASE_DATA | jq
 if [ $HTTP_STATUS -eq 200 ]; then
   echo "Release found"
