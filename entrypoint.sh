@@ -2,6 +2,22 @@
 
 set -euo pipefail
 
+create_release_data() {
+
+  RELEASE_DATA="{}"
+  RELEASE_DATA=$(echo ${RELEASE_DATA} | jq --arg tag $TAG '.tag_name = $tag')
+  DRAFT=${DRAFT:-"n"}
+  if [ "${DRAFT}" == "y" ]; then
+    RELEASE_DATA=$(echo ${RELEASE_DATA} | jq '.draft = true')
+  fi
+  PRERELEASE_REGEX=${PRERELEASE_REGEX:-""}
+  if [ -n "${PRERELEASE_REGEX}" ]; then
+    if echo "${TAG}" | grep -qE "$PRERELEASE_REGEX"; then
+      RELEASE_DATA=$(echo ${RELEASE_DATA} | jq '.prerelease = true')
+    fi
+  fi
+}
+
 TAG="$(echo ${GITHUB_REF} | grep tags | grep -o "[^/]*$" || true)"
 
 if [ -z $TAG ]; then
@@ -29,18 +45,7 @@ HTTP_RESPONSE=$(curl --write-out "HTTPSTATUS:%{http_code}" \
 
 HTTP_STATUS=$(echo $HTTP_RESPONSE | tr -d '\n' | sed -e 's/.*HTTPSTATUS://')
 
-RELEASE_DATA="{}"
-RELEASE_DATA=$(echo ${RELEASE_DATA} | jq --arg tag $TAG '.tag_name = $tag')
-DRAFT=${DRAFT:-"n"}
-if [ "${DRAFT}" == "y" ]; then
-  RELEASE_DATA=$(echo ${RELEASE_DATA} | jq '.draft = true')
-fi
-PRERELEASE_REGEX=${PRERELEASE_REGEX:-""}
-if [ -n "${PRERELEASE_REGEX}" ]; then
-  if echo "${TAG}" | grep -qE "$PRERELEASE_REGEX"; then
-    RELEASE_DATA=$(echo ${RELEASE_DATA} | jq '.prerelease = true')
-  fi
-fi
+create_release_data
 echo $RELEASE_DATA | jq
 if [ $HTTP_STATUS -eq 200 ]; then
   echo "Release found"
