@@ -7,7 +7,7 @@ Create a new GitHub release whenever a tag is pushed.
 The following basic workflow will create a release whenever any tag is pushed.
 
 ```github-actions
-workflow "Chech & Release" {
+workflow "Check & Release" {
   on = "push"
   resolves = ["Create GitHub release"]
 
@@ -30,7 +30,7 @@ Regular expressions containing `\` need them to be escaped with `\\`.
 * `PRERELEASE_REGEX` Any version matching this regular expression will be marked as pre-release. Disabled by default.
 
 ```github-actions
-action "release version" {
+action "Create GitHub release" {
   uses = "Roang-zero1/github-create-release-action@master"
   env = {
     VERSION_REGEX = "^v[[:digit:]]+\\.[[:digit:]]+\\.[[:digit:]]+",
