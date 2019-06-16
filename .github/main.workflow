@@ -1,6 +1,6 @@
 workflow "Check & Release" {
   on = "push"
-  resolves = ["release version"]
+  resolves = ["Create GitHub release"]
 }
 
 action "lint" {
@@ -25,7 +25,7 @@ action "filter tag" {
   ]
 }
 
-action "release version" {
+action "Create GitHub release" {
   uses = "Roang-zero1/github-create-release-action@master"
   env = {
     VERSION_REGEX = "^v[[:digit:]]+\\.[[:digit:]]+\\.[[:digit:]]+",
