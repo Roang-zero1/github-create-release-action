@@ -1,4 +1,4 @@
-# GitHub Action for Factorio mod packaging
+# GitHub Action for Creating a Release on Tag push
 
 Create a new GitHub release whenever a tag is pushed.
 
