@@ -1,0 +1,26 @@
+on: push
+name: Check & Release
+jobs:
+  shfmt:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@master
+    - name: shfmt
+      uses: bltavares/actions/shfmt@master
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        SHFMT_ARGS: -i 2 -ci
+    - name: lint
+      uses: docker://cdssnc/docker-lint-github-action
+      with:
+        args: --ignore DL3007 --ignore DL3018
+    - name: filter tag
+      uses: actions/bin/filter@3c0b4f0e63ea54ea5df2914b4fabf383368cd0da
+      with:
+        args: tag
+    - name: Create GitHub release
+      uses: Roang-zero1/github-create-release-action@master
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        UPDATE_EXISTING: "y"
+        VERSION_REGEX: ^v[[:digit:]]+\.[[:digit:]]+\.[[:digit:]]+
