@@ -1,5 +1,17 @@
 # CHANGELOG
 
+## v1.0.3
+
+* Migrate to Actions V2 yml files
+
+## v1.0.2
+
+* Update workflow
+
+## v1.0.1
+
+* Change Action name to be unique
+
 ## v1.0.0
 
 Initial Release
