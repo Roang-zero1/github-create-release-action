@@ -6,48 +6,39 @@ Create a new GitHub release whenever a tag is pushed.
 
 The following basic workflow will create a release whenever any tag is pushed.
 
-```github-actions
-workflow "Check & Release" {
-  on = "push"
-  resolves = ["Create GitHub release"]
-
-  action "Create GitHub release" {
-    uses = "Roang-zero1/github-create-release-action@master"
-    secrets = [
-      "GITHUB_TOKEN"
-    ]
-  }
-}
+```yaml
+on: push
+name: Release
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Create GitHub release
+      uses: Roang-zero1/github-create-release-action@master
+      with:
+        version_regex: ^v[[:digit:]]+\.[[:digit:]]+\.[[:digit:]]+
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 ```
 
 ### Limiting versions and creating pre-releases
 
 If only certain tags should create releases or some releases should be created as pre-release you can set regular expression to achieve this.
-These regular expression are evaluated with GNU grep, so these regexes need to be compatible with it.
+These regular expression are evaluated with GNU grep, so these regular expressions need to be compatible with it.
 Regular expressions containing `\` need them to be escaped with `\\`.
 
-* `VERSION_REGEX` Regular expression to verify that the version is in a correct format. Defaults to `.*` (accept everything).
-* `PRERELEASE_REGEX` Any version matching this regular expression will be marked as pre-release. Disabled by default.
+* `version_regex` Regular expression to verify that the version is in a correct format. Defaults to `.*` (accept everything).
+* `prerelease_regex` Any version matching this regular expression will be marked as pre-release. Disabled by default.
 
-```github-actions
-action "Create GitHub release" {
-  uses = "Roang-zero1/github-create-release-action@master"
-  env = {
-    VERSION_REGEX = "^v[[:digit:]]+\\.[[:digit:]]+\\.[[:digit:]]+",
-    PRERELEASE_REGEX = "^v2\\.[[:digit:]]+\\.[[:digit:]]+",
-  }
-  secrets = [
-    "GITHUB_TOKEN"
-  ]
-  needs = ["filter tag"]
-}
-
+```yaml
+- name: Create GitHub release
+  uses: Roang-zero1/github-create-release-action@master
+  with:
+    version_regex: ^v[[:digit:]]+\.[[:digit:]]+\.[[:digit:]]+
+    prerelease_regex: "^v2\\.[[:digit:]]+\\.[[:digit:]]+"
+  env:
+    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 ```
-
-### Switches
-
-* `DRAFT` Create new releases as draft. Existing releases will not be unpublished.
-* `UPDATE_EXISTING` Overwrite existing release data with the information from the tag
 
 ### Changelog parsing
 
@@ -70,17 +61,31 @@ Initial Release
 Then the text `Initial Release` will be passed as body.
 Markdown restrictions for release bodies still apply.
 
-* `CHANGELOG_FILE` Select the file from where Changelog messages should be parsed
-* `CHANGELOG_HEADING` Heading level at which the tag headings exist.
+## Inputs
 
-## Environment Variables
+### `VERSION_REGEX`
 
-* `VERSION_REGEX` Regular expression to verify that the version is in a correct format. Defaults to `.*` (accept everything).
-* `PRERELEASE_REGEX` Any version matching this regular expression will be marked as pre-release. Disabled by default.
-* `DRAFT` Create the releases as draft (`true|false [default: false]`). Existing will not be updated from released to draft.
-* `UPDATE_EXISTING` Controls whether an existing release should be updated with data from the latest push (`true|false [default: false]`).
-* `CHANGELOG_FILE` File that contains the Markdown formatted changelog.
-* `CHANGELOG_HEADING` Heading level at which the tag headings exist.
+Regular expression to verify that the version is in a correct format. Defaults to `.*` (accept everything).
+
+### `PRERELEASE_REGEX`
+
+Any version matching this regular expression will be marked as pre-release. Disabled by default.
+
+### `DRAFT`
+
+Create the releases as draft (`true|false [default: false]`). Existing will not be updated from released to draft.
+
+### `UPDATE_EXISTING`
+
+Controls whether an existing release should be updated with data from the latest push (`true|false [default: false]`).
+
+### `CHANGELOG_FILE`
+
+File that contains the Markdown formatted changelog. Defaults to `CHANGELOG.md`.
+
+### `CHANGELOG_HEADING`
+
+Heading level at which the tag headings exist. Defaults to `h2`, this parses headings at the markdown level `##`.
 
 ## Secrets
 
