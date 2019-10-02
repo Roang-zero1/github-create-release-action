@@ -1,22 +1,22 @@
 #!/bin/sh
 
 # Backwards compability mapping
-if [ -n $VERSION_REGEX ]; then
+if [ -z $VERSION_REGEX ]; then :; else
   INPUT_VERSION_REGEX=$VERSION_REGEX
 fi
-if [ -n $PRERELEASE_REGEX ]; then
+if [ -z $PRERELEASE_REGEX ]; then :; else
   INPUT_PRERELEASE_REGEX=$PRERELEASE_REGEX
 fi
-if [ -n $DRAFT ]; then
+if [ -z $DRAFT ]; then :; else
   INPUT_CREATE_DRAFT=$DRAFT
 fi
-if [ -n $UPDATE_EXISTING ]; then
+if [ -z $UPDATE_EXISTING ]; then :; else
   INPUT_UPDATE_EXISTING=$UPDATE_EXISTING
 fi
-if [ -n $CHANGELOG_FILE ]; then
+if [ -z $CHANGELOG_FILE ]; then :; else
   INPUT_CHANGELOG_FILE=$CHANGELOG_FILE
 fi
-if [ -n $CHANGELOG_HEADING ]; then
+if [ -z $CHANGELOG_HEADING ]; then :; else
   INPUT_CHANGELOG_HEADING=$CHANGELOG_HEADING
 fi
 
