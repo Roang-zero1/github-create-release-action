@@ -1,23 +1,24 @@
+name: Check
 on:
-  [push, pull_request]:
+  push:
     branches: '**'
-
-  name: Check
-  jobs:
-    shfmt:
-      runs-on: ubuntu-latest
-      steps:
-      - uses: actions/checkout@master
-      - name: Format and check with shfmt
-        uses: bltavares/actions/shfmt@master
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          SHFMT_ARGS: -i 2 -ci
-    lint:
-      runs-on: ubuntu-latest
-      steps:
-      - uses: actions/checkout@master
-      - name: Lint docker file (docker-lint)
-        uses: docker://cdssnc/docker-lint-github-action
-        with:
-          args: --ignore DL3007 --ignore DL3018
+  pull_request:
+    branches: '**'
+jobs:
+  shfmt:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@master
+    - name: Format and check with shfmt
+      uses: bltavares/actions/shfmt@master
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        SHFMT_ARGS: -i 2 -ci
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@master
+    - name: Lint docker file (docker-lint)
+      uses: docker://cdssnc/docker-lint-github-action
+      with:
+        args: --ignore DL3007 --ignore DL3018
