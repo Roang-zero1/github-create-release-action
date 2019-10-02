@@ -1,5 +1,25 @@
 #!/bin/sh
 
+# Backwards compability mapping
+if [ -n $VERSION_REGEX ]; then
+  INPUT_VERSION_REGEX=$VERSION_REGEX
+fi
+if [ -n $PRERELEASE_REGEX ]; then
+  INPUT_PRERELEASE_REGEX=$PRERELEASE_REGEX
+fi
+if [ -n $DRAFT ]; then
+  INPUT_CREATE_DRAFT=$DRAFT
+fi
+if [ -n $UPDATE_EXISTING ]; then
+  INPUT_UPDATE_EXISTING=$UPDATE_EXISTING
+fi
+if [ -n $CHANGELOG_FILE ]; then
+  INPUT_CHANGELOG_FILE=$CHANGELOG_FILE
+fi
+if [ -n $CHANGELOG_HEADING ]; then
+  INPUT_CHANGELOG_HEADING=$CHANGELOG_HEADING
+fi
+
 set -euo pipefail
 
 create_release_data() {
