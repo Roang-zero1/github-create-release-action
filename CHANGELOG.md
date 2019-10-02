@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## v2.0.0
+
+* Add `action.yml` file
+* Switch from using `env` to `inputs`
+
+
 ## v1.0.3
 
 * Migrate to Actions V2 yml files
