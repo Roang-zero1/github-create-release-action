@@ -25,7 +25,9 @@ jobs:
     steps:
     - name: Create GitHub release
       uses: Roang-zero1/github-create-release-action@master
+      with:
+        version_regex: '^v[[:digit:]]+\.[[:digit:]]+\.[[:digit:]]+'
+        update_existing: 'true'
+        create_draft: 'true'
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        UPDATE_EXISTING: "true"
-        VERSION_REGEX: ^v[[:digit:]]+\.[[:digit:]]+\.[[:digit:]]+
