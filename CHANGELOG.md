@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## v2.0.1
+
+* Update `README.md`
+
 ## v2.0.0
 
 * Add `action.yml` file
