@@ -1,0 +1,31 @@
+# action.yml
+name: 'GitHub Create Tag Release'
+description: 'Create a GitHub release from a pushed Tag.'
+branding:
+  icon: 'zap'
+  color: 'white'
+inputs:
+  # Version and release control inputs
+  version_regex:
+    description: 'Regular expression to verify that the version is in a correct format. Defaults to .* (accept everything).'
+    default: '^.*$'
+  prerelease_regex:
+    description: 'Any version matching this regular expression will be marked as pre-release. Disabled by default.'
+    default: ''
+  create_draft:
+    description: 'Create the releases as draft (true|false [default: false]). Existing will not be updated from released to draft.'
+    default: 'false'
+  update_existing:
+    description: 'Controls whether an existing release should be updated with data from the latest push (true|false [default: false]).'
+    default: 'false'
+
+  # Inputs related to the Changelog parsing
+  changelog_file:
+    description: 'Path of file that contains the Markdown formatted changelog.'
+    default: 'CHANGELOG.md'
+  changelog_heading:
+    description: 'Heading level at which the tag headings exist.'
+    default: 'h2'
+runs:
+  using: 'docker'
+  image: 'Dockerfile'

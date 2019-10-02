@@ -3,22 +3,18 @@
 set -euo pipefail
 
 create_release_data() {
-  local CHANGELOG_FILE=${CHANGELOG_FILE:-"CHANGELOG.md"}
-  local CHANGELOG_HEADING=${CHANGELOG_HEADING:-"h2"}
-
   RELEASE_DATA="{}"
   RELEASE_DATA=$(echo ${RELEASE_DATA} | jq --arg tag $TAG '.tag_name = $tag')
-  if [ -e ${CHANGELOG_FILE} ]; then
-    RELEASE_BODY=$(submark -O --$CHANGELOG_HEADING $TAG $CHANGELOG_FILE)
+  if [ -e $changelog_file ]; then
+    RELEASE_BODY=$(submark -O --$changelog_heading $TAG $changelog_file)
     if [ -n "${RELEASE_BODY}" ]; then
       RELEASE_DATA=$(echo ${RELEASE_DATA} | jq --arg body "${RELEASE_BODY}" '.body = $body')
     fi
   fi
-  RELEASE_DATA=$(echo ${RELEASE_DATA} | jq --argjson value ${DRAFT:-"false"} '.draft = $value')
-  PRERELEASE_REGEX=${PRERELEASE_REGEX:-""}
+  RELEASE_DATA=$(echo ${RELEASE_DATA} | jq --argjson value ${create_draft} '.draft = $value')
   local PRERELEASE_VALUE="false"
-  if [ -n "${PRERELEASE_REGEX}" ]; then
-    if echo "${TAG}" | grep -qE "$PRERELEASE_REGEX"; then
+  if [ -n "${prerelease_regex}" ]; then
+    if echo "${TAG}" | grep -qE "$prerelease_regex"; then
       PRERELEASE_VALUE="true"
     fi
   fi
@@ -32,10 +28,8 @@ if [ -z $TAG ]; then
   exit 1
 fi
 
-V_REGEX=${VERSION_REGEX:-"^.*$"}
-
-if ! echo "${TAG}" | grep -qE "$V_REGEX"; then
-  echo "Bad version in tag, needs to be adhere to the regex '$V_REGEX'" 1>&2
+if ! echo "${TAG}" | grep -qE "$version_regex"; then
+  echo "Bad version in tag, needs to be adhere to the regex '$version_regex'" 1>&2
   exit 1
 fi
 
@@ -53,8 +47,7 @@ HTTP_STATUS=$(echo $HTTP_RESPONSE | tr -d '\n' | sed -e 's/.*HTTPSTATUS://')
 if [ $HTTP_STATUS -eq 200 ]; then
   echo "Existing release found"
 
-  UPDATE_EXISTING=${UPDATE_EXISTING:-"n"}
-  if [ "${UPDATE_EXISTING}" == "true" ]; then
+  if [ "${update_existing}" == "true" ]; then
     echo "Updating existing release"
     create_release_data
     RECEIVED_DATA=$(echo $HTTP_RESPONSE | sed -e 's/HTTPSTATUS\:.*//g')
