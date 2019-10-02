@@ -2,7 +2,7 @@
 
 Create a new GitHub release whenever a tag is pushed.
 
-## Usage
+## Example Usage
 
 The following basic workflow will create a release whenever any tag is pushed.
 
@@ -63,27 +63,27 @@ Markdown restrictions for release bodies still apply.
 
 ## Inputs
 
-### `VERSION_REGEX`
+### `version_regex`
 
 Regular expression to verify that the version is in a correct format. Defaults to `.*` (accept everything).
 
-### `PRERELEASE_REGEX`
+### `prerelease_regex`
 
 Any version matching this regular expression will be marked as pre-release. Disabled by default.
 
-### `DRAFT`
+### `create_draft`
 
 Create the releases as draft (`true|false [default: false]`). Existing will not be updated from released to draft.
 
-### `UPDATE_EXISTING`
+### `update_existing`
 
 Controls whether an existing release should be updated with data from the latest push (`true|false [default: false]`).
 
-### `CHANGELOG_FILE`
+### `changelog_file`
 
 File that contains the Markdown formatted changelog. Defaults to `CHANGELOG.md`.
 
-### `CHANGELOG_HEADING`
+### `changelog_heading`
 
 Heading level at which the tag headings exist. Defaults to `h2`, this parses headings at the markdown level `##`.
 
