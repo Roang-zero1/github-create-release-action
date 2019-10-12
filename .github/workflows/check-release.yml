@@ -28,6 +28,5 @@ jobs:
       with:
         version_regex: '^v[[:digit:]]+\.[[:digit:]]+\.[[:digit:]]+'
         update_existing: 'true'
-        create_draft: 'true'
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
