@@ -28,8 +28,13 @@ create_release_data() {
   if [ -e $INPUT_CHANGELOG_FILE ]; then
     RELEASE_BODY=$(submark -O --$INPUT_CHANGELOG_HEADING $TAG $INPUT_CHANGELOG_FILE)
     if [ -n "${RELEASE_BODY}" ]; then
+      echo "Changelog entry found, adding to release"
       RELEASE_DATA=$(echo ${RELEASE_DATA} | jq --arg body "${RELEASE_BODY}" '.body = $body')
+    else
+      echo "\e[31mChangelog entry not found!\e[0m"
     fi
+  else
+    echo "\e[31mChangelog file not found!\e[0m"
   fi
   RELEASE_DATA=$(echo ${RELEASE_DATA} | jq --argjson value ${INPUT_CREATE_DRAFT} '.draft = $value')
   local PRERELEASE_VALUE="false"
