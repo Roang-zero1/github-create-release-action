@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## v2.0.2
+
+* Add additional output for the Changelog parsing process
+* Add required fields to the input parameters
+
 ## v2.0.1
 
 * Update `README.md`
