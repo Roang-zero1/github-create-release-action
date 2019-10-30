@@ -1,6 +1,10 @@
 # GitHub Action for Creating a Release on Tag push
 
-Create a new GitHub release whenever a tag is pushed.
+Forked since the tag creation is done by another action and just passed  
+to this action in the same workflow (workaround since 1 workflow/action  
+can not trigger another workflow/action).  
+
+Creates a new GitHub release whenever a tag is pushed.
 
 ## Example Usage
 
@@ -19,6 +23,7 @@ jobs:
         version_regex: ^v[[:digit:]]+\.[[:digit:]]+\.[[:digit:]]+
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        CREATED_TAG: *premade tag*
 ```
 
 ### Limiting versions and creating pre-releases
