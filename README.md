@@ -113,13 +113,13 @@ Create the releases as draft (`true|false [default: false]`). Existing will not 
 
 Controls whether an existing release should be updated with data from the latest push (`true|false [default: false]`).
 
-### `changelog_file`
-
-File that contains the Markdown formatted changelog. Defaults to `CHANGELOG.md`.
-
 ### `created_tag`
 
 Allows to pass an already created tag, forces update_existing to true.
+
+### `changelog_file`
+
+File that contains the Markdown formatted changelog. Defaults to `CHANGELOG.md`.
 
 ### `changelog_heading`
 
