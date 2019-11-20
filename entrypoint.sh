@@ -23,7 +23,7 @@ fi
 set -euo pipefail
 
 set_tag() {
-if [  "${INPUT_CREATED_TAG}" == false ];
+if [  "${INPUT_CREATED_TAG}" == "false" ];
 then
 TAG="$(echo ${GITHUB_REF} | grep tags | grep -o "[^/]*$" || true)";
 else
