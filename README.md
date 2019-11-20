@@ -117,6 +117,10 @@ Controls whether an existing release should be updated with data from the latest
 
 File that contains the Markdown formatted changelog. Defaults to `CHANGELOG.md`.
 
+### `created_tag`
+
+Allows to pass an already created tag, forces update_existing to true.
+
 ### `changelog_heading`
 
 Heading level at which the tag headings exist. Defaults to `h2`, this parses headings at the markdown level `##`.
