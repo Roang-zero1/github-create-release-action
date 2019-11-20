@@ -1,6 +1,15 @@
 #!/bin/sh
 
 # Backwards compability mapping
+if [ -z $VERSION_REGEX ]; then :; else
+  INPUT_VERSION_REGEX=$VERSION_REGEX
+fi
+if [ -z $PRERELEASE_REGEX ]; then :; else
+  INPUT_PRERELEASE_REGEX=$PRERELEASE_REGEX
+fi
+if [ -z $DRAFT ]; then :; else
+  INPUT_CREATE_DRAFT=$DRAFT
+fi
 if [ -z $UPDATE_EXISTING ]; then :; else
   INPUT_UPDATE_EXISTING=$UPDATE_EXISTING
 fi
