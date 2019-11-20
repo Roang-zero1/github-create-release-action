@@ -1,9 +1,5 @@
 # GitHub Action for Creating a Release on Tag push
 
-Forked since the tag creation is done by another action and just passed  
-to this action in the same workflow (workaround since 1 workflow/action  
-can not trigger another workflow/action).  
-
 Creates a new GitHub release whenever a tag is pushed.
 
 ## Example Usage
@@ -23,7 +19,6 @@ jobs:
         version_regex: ^v[[:digit:]]+\.[[:digit:]]+\.[[:digit:]]+
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        CREATED_TAG: *premade tag*
 ```
 
 ### Limiting versions and creating pre-releases
@@ -43,6 +38,40 @@ Regular expressions containing `\` need them to be escaped with `\\`.
     prerelease_regex: "^v2\\.[[:digit:]]+\\.[[:digit:]]+"
   env:
     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+```
+
+### Passing a tag to not rely on manual tag pushes
+
+If you want to create a tag automatically and create the release in the same workflow you can set CREATED_TAG to achieve this.
+This allows you to create a fully automated release in one workflow file (workaround because one workflow/action can not trigger another workflow/action).  
+The example below uses K-Phoen/semver-release-action to create the tag whenever a pull request is closed, merged, and the head_ref starts with RC.
+After the tag is created it is passed to the create-release-action via the CREATED_TAG env variable using the output of the semver-release-action.
+
+```yaml
+on:
+  pull_request:
+    types: closed
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.merged && startsWith(github.head_ref, 'RC')
+    steps:
+      - uses: actions/checkout@master
+      - name: Tag and prepare release
+        id: tag_and_prepare_release
+        uses: K-Phoen/semver-release-action@master
+        with:
+          release_branch: master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Upload release notes
+        if: steps.tag_and_prepare_release.outputs.tag
+        uses: Roang-zero1/github-create-release-action@master
+        with:
+          created_tag: ${{ steps.tag_and_prepare_release.outputs.tag }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 ```
 
 ### Changelog parsing
