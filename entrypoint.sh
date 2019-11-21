@@ -1,6 +1,15 @@
 #!/bin/sh
 
 # Backwards compability mapping
+if [ -z $VERSION_REGEX ]; then :; else
+  INPUT_VERSION_REGEX=$VERSION_REGEX
+fi
+if [ -z $PRERELEASE_REGEX ]; then :; else
+  INPUT_PRERELEASE_REGEX=$PRERELEASE_REGEX
+fi
+if [ -z $DRAFT ]; then :; else
+  INPUT_CREATE_DRAFT=$DRAFT
+fi
 if [ -z $UPDATE_EXISTING ]; then :; else
   INPUT_UPDATE_EXISTING=$UPDATE_EXISTING
 fi
@@ -12,6 +21,16 @@ if [ -z $CHANGELOG_HEADING ]; then :; else
 fi
 
 set -euo pipefail
+
+set_tag() {
+if [  "${INPUT_CREATED_TAG}" == "false" ];
+then
+TAG="$(echo ${GITHUB_REF} | grep tags | grep -o "[^/]*$" || true)";
+else
+TAG=${INPUT_CREATED_TAG};
+INPUT_UPDATE_EXISTING="true"
+fi
+}
 
 create_release_data() {
   RELEASE_DATA="{}"
@@ -37,7 +56,7 @@ create_release_data() {
   RELEASE_DATA=$(echo ${RELEASE_DATA} | jq --argjson value $PRERELEASE_VALUE '.prerelease = $value')
 }
 
-TAG=${CREATED_TAG}
+set_tag
 
 if [ -z $TAG ]; then
   echo "This is not a tagged push." 1>&2

@@ -22,6 +22,10 @@ inputs:
     description: 'Controls whether an existing release should be updated with data from the latest push (true|false [default: false]).'
     default: 'false'
     required: false
+  created_tag:
+    description: 'Allows to pass an already created tag, forces update_existing to true.'
+    default: 'false'
+    required: false
 
   # Inputs related to the Changelog parsing
   changelog_file:
