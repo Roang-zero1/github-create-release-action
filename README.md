@@ -117,6 +117,10 @@ Controls whether an existing release should be updated with data from the latest
 
 Allows to pass an already created tag, forces update_existing to true.
 
+### `release_title`
+
+Allows to pass a release title.
+
 ### `changelog_file`
 
 File that contains the Markdown formatted changelog. Defaults to `CHANGELOG.md`.

@@ -26,6 +26,10 @@ inputs:
     description: 'Allows to pass an already created tag, forces update_existing to true.'
     default: 'false'
     required: false
+  release_title:
+    description: 'Allows to pass a title for the release.'
+    default: 'false'
+    required: false
 
   # Inputs related to the Changelog parsing
   changelog_file:

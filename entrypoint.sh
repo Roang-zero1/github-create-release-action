@@ -25,16 +25,24 @@ set -euo pipefail
 set_tag() {
 if [  "${INPUT_CREATED_TAG}" == "false" ];
 then
-TAG="$(echo ${GITHUB_REF} | grep tags | grep -o "[^/]*$" || true)";
+  TAG="$(echo ${GITHUB_REF} | grep tags | grep -o "[^/]*$" || true)";
 else
-TAG=${INPUT_CREATED_TAG};
-INPUT_UPDATE_EXISTING="true"
+  TAG=${INPUT_CREATED_TAG};
+  INPUT_UPDATE_EXISTING="true"
+fi
+}
+
+set_release_title() {
+if [  "${INPUT_RELEASE_TITLE}" != "false" ];
+then
+  RELEASE_DATA=$(echo ${RELEASE_DATA} | jq --arg name "${INPUT_RELEASE_TITLE}" '.name = $name')
 fi
 }
 
 create_release_data() {
   RELEASE_DATA="{}"
   RELEASE_DATA=$(echo ${RELEASE_DATA} | jq --arg tag $TAG '.tag_name = $tag')
+  set_release_title
   if [ -e $INPUT_CHANGELOG_FILE ]; then
     RELEASE_BODY=$(submark -O --$INPUT_CHANGELOG_HEADING $TAG $INPUT_CHANGELOG_FILE)
     if [ -n "${RELEASE_BODY}" ]; then
