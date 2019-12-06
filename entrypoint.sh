@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Backwards compability mapping
+# Backwards compatibility mapping
 if [ -z $VERSION_REGEX ]; then :; else
   INPUT_VERSION_REGEX=$VERSION_REGEX
 fi
