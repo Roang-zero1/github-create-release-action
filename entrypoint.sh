@@ -25,7 +25,6 @@ set -euo pipefail
 set_tag() {
   if [ -n "${INPUT_CREATED_TAG}" ]; then
     TAG=${INPUT_CREATED_TAG}
-    INPUT_UPDATE_EXISTING="true"
   else
     TAG="$(echo ${GITHUB_REF} | grep tags | grep -o "[^/]*$" || true)"
   fi
