@@ -1,45 +1,45 @@
 # action.yml
-name: 'GitHub Create Tag Release'
-description: 'Create a GitHub release from a pushed Tag.'
+name: "GitHub Create Tag Release"
+description: "Create a GitHub release from a pushed Tag."
 branding:
-  icon: 'zap'
-  color: 'white'
+  icon: "zap"
+  color: "white"
 inputs:
   # Version and release control inputs
   version_regex:
-    description: 'Regular expression to verify that the version is in a correct format. Defaults to .* (accept everything).'
-    default: '^.*$'
+    description: "Regular expression to verify that the version is in a correct format. Defaults to .* (accept everything)."
+    default: "^.*$"
     required: false
   prerelease_regex:
-    description: 'Any version matching this regular expression will be marked as pre-release. Disabled by default.'
-    default: ''
+    description: "Any version matching this regular expression will be marked as pre-release. Disabled by default."
+    default: ""
     required: false
   create_draft:
-    description: 'Create the releases as draft (true|false [default: false]). Existing will not be updated from released to draft.'
-    default: 'false'
+    description: "Create the releases as draft (true|false [default: false]). Existing will not be updated from released to draft."
+    default: "false"
     required: false
   update_existing:
-    description: 'Controls whether an existing release should be updated with data from the latest push (true|false [default: false]).'
-    default: 'false'
+    description: "Controls whether an existing release should be updated with data from the latest push (true|false [default: false])."
+    default: "false"
     required: false
   created_tag:
-    description: 'Allows to pass an already created tag, forces update_existing to true.'
-    default: 'false'
+    description: "Allows to pass an already created tag, forces update_existing to true."
+    default: "false"
     required: false
   release_title:
-    description: 'Allows to pass a title for the release.'
-    default: 'false'
+    description: "Allows to pass a title for the release."
+    default: "false"
     required: false
 
   # Inputs related to the Changelog parsing
   changelog_file:
-    description: 'Path of file that contains the Markdown formatted changelog.'
-    default: 'CHANGELOG.md'
+    description: "Path of file that contains the Markdown formatted changelog."
+    default: "CHANGELOG.md"
     required: false
   changelog_heading:
-    description: 'Heading level at which the tag headings exist.'
-    default: 'h2'
+    description: "Heading level at which the tag headings exist."
+    default: "h2"
     required: false
 runs:
-  using: 'docker'
-  image: 'Dockerfile'
+  using: "docker"
+  image: "Dockerfile"
