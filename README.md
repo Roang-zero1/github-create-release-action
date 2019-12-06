@@ -13,12 +13,12 @@ jobs:
   release:
     runs-on: ubuntu-latest
     steps:
-    - name: Create GitHub release
-      uses: Roang-zero1/github-create-release-action@master
-      with:
-        version_regex: ^v[[:digit:]]+\.[[:digit:]]+\.[[:digit:]]+
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Create GitHub release
+        uses: Roang-zero1/github-create-release-action@master
+        with:
+          version_regex: ^v[[:digit:]]+\.[[:digit:]]+\.[[:digit:]]+
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 ```
 
 ### Limiting versions and creating pre-releases
@@ -27,8 +27,8 @@ If only certain tags should create releases or some releases should be created a
 These regular expression are evaluated with GNU grep, so these regular expressions need to be compatible with it.
 Regular expressions containing `\` need them to be escaped with `\\`.
 
-* `version_regex` Regular expression to verify that the version is in a correct format. Defaults to `.*` (accept everything).
-* `prerelease_regex` Any version matching this regular expression will be marked as pre-release. Disabled by default.
+- `version_regex` Regular expression to verify that the version is in a correct format. Defaults to `.*` (accept everything).
+- `prerelease_regex` Any version matching this regular expression will be marked as pre-release. Disabled by default.
 
 ```yaml
 - name: Create GitHub release
@@ -44,7 +44,7 @@ Regular expressions containing `\` need them to be escaped with `\\`.
 
 If you want to create a tag automatically and create the release in the same workflow you can set CREATED_TAG to achieve this.
 This allows you to create a fully automated release in one workflow file (workaround because one workflow/action can not trigger another workflow/action).  
-The example below uses K-Phoen/semver-release-action to create the tag whenever a pull request is closed, merged, and the head_ref starts with RC.
+The example below uses `K-Phoen/semver-release-action` to create the tag whenever a pull request is closed, merged, and the head_ref starts with RC.
 After the tag is created it is passed to the create-release-action via the CREATED_TAG env variable using the output of the semver-release-action.
 
 ```yaml
@@ -115,7 +115,7 @@ Controls whether an existing release should be updated with data from the latest
 
 ### `created_tag`
 
-Allows to pass an already created tag, forces update_existing to true.
+Allows to pass an already created tag.
 
 ### `release_title`
 
@@ -131,4 +131,4 @@ Heading level at which the tag headings exist. Defaults to `h2`, this parses hea
 
 ## Secrets
 
-* `GITHUB_TOKEN` Provided by GitHub action, does not need to be set.
+- `GITHUB_TOKEN` Provided by GitHub action, does not need to be set.
