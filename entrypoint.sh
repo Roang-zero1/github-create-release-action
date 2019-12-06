@@ -23,13 +23,12 @@ fi
 set -euo pipefail
 
 set_tag() {
-if [  "${INPUT_CREATED_TAG}" == "false" ];
-then
-  TAG="$(echo ${GITHUB_REF} | grep tags | grep -o "[^/]*$" || true)";
-else
-  TAG=${INPUT_CREATED_TAG};
-  INPUT_UPDATE_EXISTING="true"
-fi
+  if [ -n "${INPUT_CREATED_TAG}" ]; then
+    TAG=${INPUT_CREATED_TAG}
+    INPUT_UPDATE_EXISTING="true"
+  else
+    TAG="$(echo ${GITHUB_REF} | grep tags | grep -o "[^/]*$" || true)"
+  fi
 }
 
 create_release_data() {
