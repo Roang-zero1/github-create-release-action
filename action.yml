@@ -28,7 +28,7 @@ inputs:
     required: false
   release_title:
     description: "Allows to pass a title for the release."
-    default: "false"
+    default: ""
     required: false
 
   # Inputs related to the Changelog parsing

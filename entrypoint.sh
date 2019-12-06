@@ -32,17 +32,9 @@ else
 fi
 }
 
-set_release_title() {
-if [  "${INPUT_RELEASE_TITLE}" != "false" ];
-then
-  RELEASE_DATA=$(echo ${RELEASE_DATA} | jq --arg name "${INPUT_RELEASE_TITLE}" '.name = $name')
-fi
-}
-
 create_release_data() {
   RELEASE_DATA="{}"
   RELEASE_DATA=$(echo ${RELEASE_DATA} | jq --arg tag $TAG '.tag_name = $tag')
-  set_release_title
   if [ -e $INPUT_CHANGELOG_FILE ]; then
     RELEASE_BODY=$(submark -O --$INPUT_CHANGELOG_HEADING $TAG $INPUT_CHANGELOG_FILE)
     if [ -n "${RELEASE_BODY}" ]; then
@@ -62,6 +54,9 @@ create_release_data() {
     fi
   fi
   RELEASE_DATA=$(echo ${RELEASE_DATA} | jq --argjson value $PRERELEASE_VALUE '.prerelease = $value')
+  if [ -n "${INPUT_RELEASE_TITLE}" ]; then
+    RELEASE_DATA=$(echo ${RELEASE_DATA} | jq --arg name "${INPUT_RELEASE_TITLE}" '.name = $name')
+  fi
 }
 
 set_tag
