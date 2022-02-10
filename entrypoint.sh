@@ -26,7 +26,7 @@ set_tag() {
   if [ -n "${INPUT_CREATED_TAG}" ]; then
     TAG=${INPUT_CREATED_TAG}
   else
-    TAG="$(echo ${GITHUB_REF} | grep tags | grep -o "[^/]*$" || true)"
+    TAG="$(echo ${GITHUB_REF} | grep tags | sed --regexp-extended 's/^\w+\/\w+\///g' || true)"
   fi
 }
 
