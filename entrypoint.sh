@@ -37,6 +37,7 @@ create_release_data() {
     RELEASE_BODY=$(submark -O --$INPUT_CHANGELOG_HEADING $TAG $INPUT_CHANGELOG_FILE)
     if [ -n "${RELEASE_BODY}" ]; then
       echo "Changelog entry found, adding to release"
+      echo "::set-output name=changelog::$(echo ${RELEASE_BODY})"
       RELEASE_DATA=$(echo ${RELEASE_DATA} | jq --arg body "${RELEASE_BODY}" '.body = $body')
     else
       echo "\e[31mChangelog entry not found!\e[0m"
