@@ -3,6 +3,7 @@
 ## v2.2.0
 
 - Add output parameter for parsed change log content (Fixes [#6](https://github.com/Roang-zero1/github-create-release-action/issues/6))
+- Add output parameter for received release metadata (id, html_url, upload_url) (Fixes [#4](https://github.com/Roang-zero1/github-create-release-action/issues/4))
 - Updated to latest submark version (Fixes [#1](https://github.com/Roang-zero1/github-create-release-action/issues/1))
 - Fix parsing for tags with slashes (Pull Request #9)
 
