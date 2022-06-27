@@ -36,14 +36,14 @@ create_release_data() {
   if [ -e $INPUT_CHANGELOG_FILE ]; then
     RELEASE_BODY=$(submark -O --$INPUT_CHANGELOG_HEADING $TAG $INPUT_CHANGELOG_FILE)
     if [ -n "${RELEASE_BODY}" ]; then
-      echo "Changelog entry found, adding to release"
+      echo "::notice::Changelog entry found, adding to release"
       echo "::set-output name=changelog::$(echo ${RELEASE_BODY})"
       RELEASE_DATA=$(echo ${RELEASE_DATA} | jq --arg body "${RELEASE_BODY}" '.body = $body')
     else
-      echo "\e[31mChangelog entry not found!\e[0m"
+      echo "::warning::Changelog entry not found!"
     fi
   else
-    echo "\e[31mChangelog file not found!\e[0m"
+    echo "::warning::Changelog file not found!"
   fi
   RELEASE_DATA=$(echo ${RELEASE_DATA} | jq --argjson value ${INPUT_CREATE_DRAFT} '.draft = $value')
   local PRERELEASE_VALUE="false"
@@ -61,12 +61,12 @@ create_release_data() {
 set_tag
 
 if [ -z $TAG ]; then
-  echo "This is not a tagged push." 1>&2
+  echo "::error::This is not a tagged push." 1>&2
   exit 1
 fi
 
 if ! echo "${TAG}" | grep -qE "$INPUT_VERSION_REGEX"; then
-  echo "Bad version in tag, needs to be adhere to the regex '$INPUT_VERSION_REGEX'" 1>&2
+  echo "::error::Bad version in tag, needs to be adhere to the regex '$INPUT_VERSION_REGEX'" 1>&2
   exit 1
 fi
 
