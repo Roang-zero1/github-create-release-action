@@ -41,6 +41,12 @@ inputs:
     default: "h2"
     required: false
 outputs:
+  id:
+    description: "The ID of the created Release"
+  html_url:
+    description: "The URL users can navigate to in order to view the release"
+  upload_url:
+    description: "The URL for uploading assets to the release"
   changelog:
     description: "Parsed content from the provided changelog file"
 

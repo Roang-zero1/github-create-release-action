@@ -91,43 +91,54 @@ if [ $HTTP_STATUS -eq 200 ]; then
 
     RELEASE_DATA=$(echo $RELEASE_DATA | jq --argjson r_value $(echo $RECEIVED_DATA | jq '.draft') '.draft = if ( $r_value != true or .draft != true ) then false else true end ')
 
-    HTTP_RESPONSE=$(curl --write-out "HTTPSTATUS:%{http_code}" \
-      -sSL \
-      -X PATCH \
-      -H "${AUTH_HEADER}" \
-      -H "Content-Type: application/json" \
-      -d "${RELEASE_DATA}" \
+    RESPONSE="$(curl
+      --write-out "%{http_code}"
+      --silent
+      --show-error
+      --location
+      --request PATCH \
+      --header "${AUTH_HEADER}" \
+      --header "Content-Type: application/json" \
+      --data "${RELEASE_DATA}" \
       "$(echo ${RECEIVED_DATA} | jq -r '.url')")
 
-    HTTP_STATUS=$(echo $HTTP_RESPONSE | tr -d '\n' | sed -e 's/.*HTTPSTATUS://')
+    HTTP_STATUS=$(tail -n1 <<< "$RESPONSE")
+    CONTENT=$(sed '$ d' <<< "$RESPONSE")
 
     if [ $HTTP_STATUS -eq 200 ]; then
-      echo "Release updated"
+      echo "::notice::Release updated"
+      echo "::set-output name=id::$(jq ".id" <<< $CONTENT)"
+      echo "::set-output name=html_url::$(jq ".html_url" <<< $CONTENT)"
+      echo "::set-output name=upload_url::$(jq ".upload_url" <<< $CONTENT)"
     else
-      echo "Failed to update release ($HTTP_STATUS):"
-      echo $HTTP_RESPONSE | sed -e 's/HTTPSTATUS\:.*//g' | jq '.errors'
+      echo "::error::Failed to update release ($HTTP_STATUS):"
+      echo $(jq ".errors" <<< $CONTENT)
       exit 1
     fi
   else
-    echo "Updating disabled, finishing workflow"
+    echo "::notice::Updating disabled, finishing workflow"
   fi
 else
   echo "Creating new release"
   create_release_data
-  HTTP_RESPONSE=$(curl --write-out "HTTPSTATUS:%{http_code}" \
-    -sSL \
-    -H "${AUTH_HEADER}" \
-    -H "Content-Type: application/json" \
-    -d "${RELEASE_DATA}" \
+  HTTP_RESPONSE=$(curl
+    --write-out "%{http_code}"
+    --silent
+    --show-error
+    --location
+    --header "${AUTH_HEADER}" \
+    --header "Content-Type: application/json" \
+    --data "${RELEASE_DATA}" \
     "https://api.github.com/repos/${GITHUB_REPOSITORY}/releases")
 
-  HTTP_STATUS=$(echo $HTTP_RESPONSE | tr -d '\n' | sed -e 's/.*HTTPSTATUS://')
+    HTTP_STATUS=$(tail -n1 <<< "$RESPONSE")
+    CONTENT=$(sed '$ d' <<< "$RESPONSE")
 
   if [ $HTTP_STATUS -eq 201 ]; then
-    echo "Release successfully created"
+    echo "::notice::Release successfully created"
   else
-    echo "Failed to create release ($HTTP_STATUS):"
-    echo $HTTP_RESPONSE | sed -e 's/HTTPSTATUS\:.*//g' | jq '.errors'
+    echo "::error::Failed to update release ($HTTP_STATUS):"
+    echo $(jq ".errors" <<< $CONTENT)
     exit 1
   fi
 fi
