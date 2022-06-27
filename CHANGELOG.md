@@ -1,8 +1,12 @@
 # CHANGELOG
 
+## v2.2.0
+
+- Fix parsing for tags with slashes (Pull Request #9)
+
 ## v2.1.0
 
-- Add option to pass tag from another action (Fixes #2 ).
+- Add option to pass tag from another action (Fixes #2).
 - Add option to pass release title.
 
 ## v2.0.2
