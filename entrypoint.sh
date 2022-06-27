@@ -90,7 +90,6 @@ if [ $HTTP_STATUS -eq 200 ]; then
     RECEIVED_DATA=$(echo $HTTP_RESPONSE | sed -e 's/HTTPSTATUS\:.*//g')
 
     RELEASE_DATA=$(echo $RELEASE_DATA | jq --argjson r_value $(echo $RECEIVED_DATA | jq '.draft') '.draft = if ( $r_value != true or .draft != true ) then false else true end ')
-    RELEASE_DATA=$(echo $RELEASE_DATA | jq --argjson r_value $(echo $RECEIVED_DATA | jq '.draft') '.draft = if ( $r_value != true or .draft != true ) then false else true end ')
 
     HTTP_RESPONSE=$(curl --write-out "HTTPSTATUS:%{http_code}" \
       -sSL \
