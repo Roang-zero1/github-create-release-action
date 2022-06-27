@@ -1,13 +1,17 @@
 # CHANGELOG
 
+## v2.2.0
+
+- Fix parsing for tags with slashes (Pull Request #9)
+
 ## v2.1.0
 
-- Add option to pass tag from another action (Fixes #2 ).
+- Add option to pass tag from another action (Fixes [#2](https://github.com/Roang-zero1/github-create-release-action/issues/2)).
 - Add option to pass release title.
 
 ## v2.0.2
 
-- Add additional output for the Changelog parsing process
+- Add additional output for the change log parsing process
 - Add required fields to the input parameters
 
 ## v2.0.1
