@@ -112,7 +112,7 @@ if [ "$HTTP_STATUS" -eq 200 ]; then
       echo "::set-output name=upload_url::$(echo "$CONTENT" | jq ".upload_url")"
     else
       echo "::error::Failed to update release ($HTTP_STATUS):"
-    echo "$CONTENT" | jq ".errors"
+      echo "$CONTENT" | jq ".errors"
       exit 1
     fi
   else
@@ -131,8 +131,8 @@ else
     --data "${RELEASE_DATA}" \
     "https://api.github.com/repos/${GITHUB_REPOSITORY}/releases")
 
-    HTTP_STATUS=$(echo "$RESPONSE" | tail -n1)
-    CONTENT=$(echo "$RESPONSE" | sed "$ d" | jq --args)
+  HTTP_STATUS=$(echo "$RESPONSE" | tail -n1)
+  CONTENT=$(echo "$RESPONSE" | sed "$ d" | jq --args)
 
   if [ "$HTTP_STATUS" -eq 201 ]; then
     echo "::notice::Release successfully created"
