@@ -4,17 +4,20 @@ Creates a new GitHub release whenever a tag is pushed.
 
 ## Example Usage
 
-The following basic workflow will create a release whenever any tag is pushed.
+The following basic workflow will create a release whenever any tag is pushed that matches the version_regex.
 
 ```yaml
-on: push
+on:
+  push:
+    tags:
+      - "*"
 name: Release
 jobs:
   release:
     runs-on: ubuntu-latest
     steps:
       - name: Create GitHub release
-        uses: Roang-zero1/github-create-release-action@master
+        uses: Roang-zero1/github-create-release-action@v2.2.0
         with:
           version_regex: ^v[[:digit:]]+\.[[:digit:]]+\.[[:digit:]]+
         env:
@@ -32,7 +35,7 @@ Regular expressions containing `\` need them to be escaped with `\\`.
 
 ```yaml
 - name: Create GitHub release
-  uses: Roang-zero1/github-create-release-action@master
+  uses: Roang-zero1/github-create-release-action@v2.2.0
   with:
     version_regex: ^v[[:digit:]]+\.[[:digit:]]+\.[[:digit:]]+
     prerelease_regex: "^v2\\.[[:digit:]]+\\.[[:digit:]]+"
@@ -57,17 +60,17 @@ jobs:
     runs-on: ubuntu-latest
     if: github.event.pull_request.merged && startsWith(github.head_ref, 'RC')
     steps:
-      - uses: actions/checkout@master
+      - uses: actions/checkout@v3
       - name: Tag and prepare release
         id: tag_and_prepare_release
-        uses: K-Phoen/semver-release-action@master
+        uses: K-Phoen/semver-release-action@v1.3.1
         with:
           release_branch: master
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Upload release notes
         if: steps.tag_and_prepare_release.outputs.tag
-        uses: Roang-zero1/github-create-release-action@master
+        uses: Roang-zero1/github-create-release-action@v2.2.0
         with:
           created_tag: ${{ steps.tag_and_prepare_release.outputs.tag }}
         env:
