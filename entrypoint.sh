@@ -43,7 +43,7 @@ create_release_data() {
       echo "::warning::Changelog entry not found!"
     fi
   else
-    echo "::warning::Changelog file not found!"
+    echo "::warning::Changelog file not found! ($INPUT_CHANGELOG_FILE)"
   fi
   RELEASE_DATA=$(echo "${RELEASE_DATA}" | jq --argjson value "${INPUT_CREATE_DRAFT}" '.draft = $value')
   local PRERELEASE_VALUE="false"
