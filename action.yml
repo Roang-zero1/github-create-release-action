@@ -40,6 +40,10 @@ inputs:
     description: "Heading level at which the tag headings exist."
     default: "h2"
     required: false
+outputs:
+  changelog:
+    description: "Parsed content from the provided changelog file"
+
 runs:
   using: "docker"
   image: "Dockerfile"
