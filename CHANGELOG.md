@@ -2,6 +2,7 @@
 
 ## v2.2.0
 
+- Updated to latest submark version (Fixes [#1](https://github.com/Roang-zero1/github-create-release-action/issues/1))
 - Fix parsing for tags with slashes (Pull Request #9)
 
 ## v2.1.0
