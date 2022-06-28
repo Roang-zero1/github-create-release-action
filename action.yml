@@ -40,6 +40,10 @@ inputs:
     description: "Heading level at which the tag headings exist."
     default: "h2"
     required: false
+  release_text:
+    description: "Text body that will be added to the release. This will disable change log parsing"
+    default: ""
+    required: false
 outputs:
   id:
     description: "The ID of the created Release"

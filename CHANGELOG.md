@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## v2.3.0
+
+- Add input parameter release_text which can be used instead of the parsed change log (Addresses [#5](https://github.com/Roang-zero1/github-create-release-action/issues/5))
+
 ## v2.2.0
 
 - Add output parameter for parsed change log content (Fixes [#6](https://github.com/Roang-zero1/github-create-release-action/issues/6))

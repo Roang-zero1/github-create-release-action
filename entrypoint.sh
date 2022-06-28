@@ -19,6 +19,12 @@ fi
 if [ -z "$CHANGELOG_HEADING" ]; then :; else
   INPUT_CHANGELOG_HEADING=$CHANGELOG_HEADING
 fi
+if [ -z "$INPUT_RELEASE_TEXT " ]; then
+  PARSE_CHANGELOG=true
+else
+  PARSE_CHANGELOG=false
+  RELEASE_BODY=$INPUT_RELEASE_TEXT
+fi
 
 set -euo pipefail
 
@@ -33,17 +39,21 @@ set_tag() {
 create_release_data() {
   RELEASE_DATA="{}"
   RELEASE_DATA=$(echo "${RELEASE_DATA}" | jq --arg tag "$TAG" '.tag_name = $tag')
-  if [ -e "$INPUT_CHANGELOG_FILE" ]; then
-    RELEASE_BODY=$(submark -O --"$INPUT_CHANGELOG_HEADING" "$TAG" "$INPUT_CHANGELOG_FILE")
-    if [ -n "${RELEASE_BODY}" ]; then
-      echo "::notice::Changelog entry found, adding to release"
-      echo "::set-output name=changelog::${RELEASE_BODY}"
-      RELEASE_DATA=$(echo "${RELEASE_DATA}" | jq --arg body "${RELEASE_BODY}" '.body = $body')
+  if $PARSE_CHANGELOG; then
+    if [ -e "$INPUT_CHANGELOG_FILE" ]; then
+      RELEASE_BODY=$(submark -O --"$INPUT_CHANGELOG_HEADING" "$TAG" "$INPUT_CHANGELOG_FILE")
+      if [ -n "${RELEASE_BODY}" ]; then
+        echo "::notice::Changelog entry found, adding to release"
+        echo "::set-output name=changelog::${RELEASE_BODY}"
+        RELEASE_DATA=$(echo "${RELEASE_DATA}" | jq --arg body "${RELEASE_BODY}" '.body = $body')
+      else
+        echo "::warning::Changelog entry not found!"
+      fi
     else
-      echo "::warning::Changelog entry not found!"
+      echo "::warning::Changelog file not found! ($INPUT_CHANGELOG_FILE)"
     fi
   else
-    echo "::warning::Changelog file not found! ($INPUT_CHANGELOG_FILE)"
+    RELEASE_DATA=$(echo "${RELEASE_DATA}" | jq --arg body "${RELEASE_BODY}" '.body = $body')
   fi
   RELEASE_DATA=$(echo "${RELEASE_DATA}" | jq --argjson value "${INPUT_CREATE_DRAFT}" '.draft = $value')
   local PRERELEASE_VALUE="false"
