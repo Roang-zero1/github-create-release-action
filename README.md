@@ -17,7 +17,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Create GitHub release
-        uses: Roang-zero1/github-create-release-action@v2.2.0
+        uses: Roang-zero1/github-create-release-action@v2.3.0
         with:
           version_regex: ^v[[:digit:]]+\.[[:digit:]]+\.[[:digit:]]+
         env:
@@ -35,7 +35,7 @@ Regular expressions containing `\` need them to be escaped with `\\`.
 
 ```yaml
 - name: Create GitHub release
-  uses: Roang-zero1/github-create-release-action@v2.2.0
+  uses: Roang-zero1/github-create-release-action@v2.3.0
   with:
     version_regex: ^v[[:digit:]]+\.[[:digit:]]+\.[[:digit:]]+
     prerelease_regex: "^v2\\.[[:digit:]]+\\.[[:digit:]]+"
@@ -70,11 +70,31 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Upload release notes
         if: steps.tag_and_prepare_release.outputs.tag
-        uses: Roang-zero1/github-create-release-action@v2.2.0
+        uses: Roang-zero1/github-create-release-action@v2.3.0
         with:
           created_tag: ${{ steps.tag_and_prepare_release.outputs.tag }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+```
+
+### Using the tag message as release body
+
+If you have tag messages that you want to use as a release body you can pass them from the workflow with the `release_text` parameter.
+
+```yaml
+- uses: actions/checkout@v3
+- name: "Refresh tags"
+  id: tag
+  run: git fetch --tags --force # Is currently required for v3 due to https://github.com/actions/checkout/issues/290
+- uses: ericcornelissen/git-tag-annotation-action@v2
+  id: tag-data
+- name: Create GitHub release
+  uses: Roang-zero1/github-create-release-action@v2.3.0
+  with:
+    version_regex: ^v[[:digit:]]+\.[[:digit:]]+\.[[:digit:]]+
+    release_text: ${{ steps.tag-data.outputs.git-tag-annotation }}
+  env:
+    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 ```
 
 ### Changelog parsing
