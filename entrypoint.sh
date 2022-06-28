@@ -19,7 +19,7 @@ fi
 if [ -z "$CHANGELOG_HEADING" ]; then :; else
   INPUT_CHANGELOG_HEADING=$CHANGELOG_HEADING
 fi
-if [ -z "$INPUT_RELEASE_TEXT " ]; then
+if [ -n "$INPUT_RELEASE_TEXT " ]; then
   PARSE_CHANGELOG=true
 else
   PARSE_CHANGELOG=false
