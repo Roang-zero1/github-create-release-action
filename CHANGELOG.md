@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## v2.3.1
+
+- Fix bug in INPUT_RELEASE_TEXT check
+- Improve action stability by pinning alpine package versions
+
 ## v2.3.0
 
 - Add input parameter release_text which can be used instead of the parsed change log (Addresses [#5](https://github.com/Roang-zero1/github-create-release-action/issues/5))
