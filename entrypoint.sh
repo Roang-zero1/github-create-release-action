@@ -26,7 +26,7 @@ else
   RELEASE_BODY=$INPUT_RELEASE_TEXT
 fi
 
-set -euo pipefail
+set -euo
 
 set_tag() {
   if [ -n "${INPUT_CREATED_TAG}" ]; then
@@ -56,13 +56,13 @@ create_release_data() {
     RELEASE_DATA=$(echo "${RELEASE_DATA}" | jq --arg body "${RELEASE_BODY}" '.body = $body')
   fi
   RELEASE_DATA=$(echo "${RELEASE_DATA}" | jq --argjson value "${INPUT_CREATE_DRAFT}" '.draft = $value')
-  local PRERELEASE_VALUE="false"
+  _PRERELEASE_VALUE="false"
   if [ -n "${INPUT_PRERELEASE_REGEX}" ]; then
     if echo "${TAG}" | grep -qE "$INPUT_PRERELEASE_REGEX"; then
-      PRERELEASE_VALUE="true"
+      _PRERELEASE_VALUE="true"
     fi
   fi
-  RELEASE_DATA=$(echo "${RELEASE_DATA}" | jq --argjson value $PRERELEASE_VALUE '.prerelease = $value')
+  RELEASE_DATA=$(echo "${RELEASE_DATA}" | jq --argjson value $_PRERELEASE_VALUE '.prerelease = $value')
   if [ -n "${INPUT_RELEASE_TITLE}" ]; then
     RELEASE_DATA=$(echo "${RELEASE_DATA}" | jq --arg name "${INPUT_RELEASE_TITLE}" '.name = $name')
   fi
@@ -94,7 +94,7 @@ HTTP_STATUS=$(echo "$HTTP_RESPONSE" | tr -d '\n' | sed -e 's/.*HTTPSTATUS://')
 if [ "$HTTP_STATUS" -eq 200 ]; then
   echo "Existing release found"
 
-  if [ "${INPUT_UPDATE_EXISTING}" == "true" ]; then
+  if [ "${INPUT_UPDATE_EXISTING}" = "true" ]; then
     echo "Updating existing release"
     create_release_data
     RECEIVED_DATA=$(echo "$HTTP_RESPONSE" | sed -e 's/HTTPSTATUS\:.*//g')
