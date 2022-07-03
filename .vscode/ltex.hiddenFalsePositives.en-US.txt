@@ -1,0 +1,1 @@
+{"rule":"ACCEPT_EXCEPT","sentence":"^\\QDefaults to \\E(?:Dummy|Ina|Jimmy-)[0-9]+\\Q (accept everything).\\E$"}

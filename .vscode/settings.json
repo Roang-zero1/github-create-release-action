@@ -1,19 +1,18 @@
 {
-  "spellright.language": [
-      "en_GB"
-  ],
+  "spellright.language": ["en_GB"],
   "spellright.documentTypes": [
-      "markdown",
-      "latex",
-      "plaintext",
-      "git-commit",
-      "shellscript",
-      "github-actions"
+    "markdown",
+    "latex",
+    "plaintext",
+    "git-commit",
+    "shellscript",
+    "github-actions"
   ],
   "spellright.parserByClass": {
-      "github-actions": {
-          "parser": "code"
-      }
+    "github-actions": {
+      "parser": "code"
+    }
   },
-  "editor.formatOnSave": true
+  "editor.formatOnSave": true,
+  "cSpell.enableFiletypes": ["!markdown"]
 }

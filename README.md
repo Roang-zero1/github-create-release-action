@@ -7,11 +7,13 @@ Creates a new GitHub release whenever a tag is pushed.
 The following basic workflow will create a release whenever any tag is pushed that matches the version_regex.
 
 ```yaml
+name: Release
+
 on:
   push:
     tags:
-      - "*"
-name: Release
+      - "v[0-9]+.[0-9]+.[0-9]+"
+
 jobs:
   release:
     runs-on: ubuntu-latest
@@ -45,10 +47,10 @@ Regular expressions containing `\` need them to be escaped with `\\`.
 
 ### Passing a tag to not rely on manual tag pushes
 
-If you want to create a tag automatically and create the release in the same workflow you can set CREATED_TAG to achieve this.
+If you want to create a tag automatically and create the release in the same workflow you can set `created_tag` to achieve this.
 This allows you to create a fully automated release in one workflow file (workaround because one workflow/action can not trigger another workflow/action).  
 The example below uses `K-Phoen/semver-release-action` to create the tag whenever a pull request is closed, merged, and the head_ref starts with RC.
-After the tag is created it is passed to the create-release-action via the CREATED_TAG env variable using the output of the semver-release-action.
+After the tag is created it is passed to the create-release-action via the CREATED_TAG env variable using the output of the `semver-release-action`.
 
 ```yaml
 on:
@@ -66,6 +68,7 @@ jobs:
         uses: K-Phoen/semver-release-action@v1.3.1
         with:
           release_branch: master
+          release_strategy: tag
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Upload release notes
@@ -97,11 +100,11 @@ If you have tag messages that you want to use as a release body you can pass the
     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 ```
 
-### Changelog parsing
+### Change log parsing
 
-This action makes it possible to extract the release description from a Markdown changelog.
+This action makes it possible to extract the release description from a Markdown change log.
 
-By default the `CHANGELOG.md` file is searched for a `##` (h2) heading matching the tag text.
+By default, the `CHANGELOG.md` file is searched for a `##` (h2) heading matching the tag text.
 
 If it is found the section is passed as body to the release API.
 
@@ -146,7 +149,7 @@ Allows to pass a release title.
 
 ### `changelog_file`
 
-File that contains the Markdown formatted changelog. Defaults to `CHANGELOG.md`.
+File that contains the Markdown formatted change log. Defaults to `CHANGELOG.md`.
 
 ### `changelog_heading`
 
