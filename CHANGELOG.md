@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## v2.3.2
+
+- Fix bug in INPUT_RELEASE_TEXT check (again)
+
 ## v2.3.1
 
 - Fix bug in INPUT_RELEASE_TEXT check
