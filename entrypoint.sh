@@ -40,7 +40,9 @@ create_release_data() {
   RELEASE_DATA="{}"
   RELEASE_DATA=$(echo "${RELEASE_DATA}" | jq --arg tag "$TAG" '.tag_name = $tag')
   if $PARSE_CHANGELOG; then
+    echo "::debug::Trying to parse change log"
     if [ -e "$INPUT_CHANGELOG_FILE" ]; then
+      echo "::debug::Change log file found"
       RELEASE_BODY=$(submark -O --"$INPUT_CHANGELOG_HEADING" "$TAG" "$INPUT_CHANGELOG_FILE")
       if [ -n "${RELEASE_BODY}" ]; then
         echo "::notice::Changelog entry found, adding to release"
@@ -53,6 +55,7 @@ create_release_data() {
       echo "::warning::Changelog file not found! ($INPUT_CHANGELOG_FILE)"
     fi
   else
+    echo "::notice::Using passed release text"
     RELEASE_DATA=$(echo "${RELEASE_DATA}" | jq --arg body "${RELEASE_BODY}" '.body = $body')
   fi
   RELEASE_DATA=$(echo "${RELEASE_DATA}" | jq --argjson value "${INPUT_CREATE_DRAFT}" '.draft = $value')
