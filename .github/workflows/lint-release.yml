@@ -11,3 +11,6 @@ jobs:
   release:
     uses: Roang-zero1/workflows/.github/workflows/create-release.yml@v1
     needs: [sh-checker, hadolint]
+  update-major-version-tag:
+    uses: Roang-zero1/workflows/.github/workflows/update-major-version-tag.yml@v1
+    needs: [release]
