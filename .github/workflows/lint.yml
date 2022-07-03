@@ -1,0 +1,14 @@
+name: Lint
+on:
+  push:
+    branches:
+      - "**"
+    tags-ignore:
+      - "v[0-9]+.[0-9]+.[0-9]+"
+  pull_request:
+
+jobs:
+  sh-checker:
+    uses: Roang-zero1/workflows/.github/workflows/sh-checker.yml@v1
+  hadolint:
+    uses: Roang-zero1/workflows/.github/workflows/hadolint.yml@v1
