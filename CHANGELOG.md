@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## v2.3.3
+
+- Update curl to latest version
+
 ## v2.3.2
 
 - Fix bug in INPUT_RELEASE_TEXT check (again)
