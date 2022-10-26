@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## v3.0.0
+
+Update to new GitHub actions output format
+
 ## v2.3.4
 
 - Remove dependency pinning
