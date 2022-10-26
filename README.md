@@ -19,7 +19,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Create GitHub release
-        uses: Roang-zero1/github-create-release-action@v2
+        uses: Roang-zero1/github-create-release-action@v3
         with:
           version_regex: ^v[[:digit:]]+\.[[:digit:]]+\.[[:digit:]]+
         env:
@@ -37,7 +37,7 @@ Regular expressions containing `\` need them to be escaped with `\\`.
 
 ```yaml
 - name: Create GitHub release
-  uses: Roang-zero1/github-create-release-action@v2
+  uses: Roang-zero1/github-create-release-action@v3
   with:
     version_regex: ^v[[:digit:]]+\.[[:digit:]]+\.[[:digit:]]+
     prerelease_regex: "^v2\\.[[:digit:]]+\\.[[:digit:]]+"
@@ -73,7 +73,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Upload release notes
         if: steps.tag_and_prepare_release.outputs.tag
-        uses: Roang-zero1/github-create-release-action@v2
+        uses: Roang-zero1/github-create-release-action@v3
         with:
           created_tag: ${{ steps.tag_and_prepare_release.outputs.tag }}
         env:
@@ -89,10 +89,10 @@ If you have tag messages that you want to use as a release body you can pass the
 - name: "Refresh tags"
   id: tag
   run: git fetch --tags --force # Is currently required for v3 due to https://github.com/actions/checkout/issues/290
-- uses: ericcornelissen/git-tag-annotation-action@v2
+- uses: ericcornelissen/git-tag-annotation-action@v3
   id: tag-data
 - name: Create GitHub release
-  uses: Roang-zero1/github-create-release-action@v2
+  uses: Roang-zero1/github-create-release-action@v3
   with:
     version_regex: ^v[[:digit:]]+\.[[:digit:]]+\.[[:digit:]]+
     release_text: ${{ steps.tag-data.outputs.git-tag-annotation }}
@@ -120,6 +120,8 @@ Initial Release
 
 Then the text `Initial Release` will be passed as body.
 Markdown restrictions for release bodies still apply.
+
+_Parsed change logs with will have the new lines (/r, /n) and percent symbols (%) escaped._
 
 ## Inputs
 
@@ -154,6 +156,24 @@ File that contains the Markdown formatted change log. Defaults to `CHANGELOG.md`
 ### `changelog_heading`
 
 Heading level at which the tag headings exist. Defaults to `h2`, this parses headings at the markdown level `##`.
+
+## Outputs
+
+### `id`
+
+ID number of the created or updated release.
+
+### `html_url`
+
+HTML access URL for the created or updated release.
+
+### `upload_url`
+
+Artifact upload URL for the created or updated release.
+
+### `changelog`
+
+Text of the parsed change log entry.
 
 ## Secrets
 
