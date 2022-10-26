@@ -46,9 +46,9 @@ create_release_data() {
       RELEASE_BODY=$(submark -O --"$INPUT_CHANGELOG_HEADING" "$TAG" "$INPUT_CHANGELOG_FILE")
       if [ -n "${RELEASE_BODY}" ]; then
         echo "::notice::Changelog entry found, adding to release"
-        RELEASE_BODY="${RELEASE_BODY//'%'/'%25'}"
-        RELEASE_BODY="${RELEASE_BODY//$'\n'/'%0A'}"
-        RELEASE_BODY="${RELEASE_BODY//$'\r'/'%0D'}"
+        RELEASE_BODY=$(echo "$RELEASE_BODY" | sed -z 's/%/%25/g')
+        RELEASE_BODY=$(echo "$RELEASE_BODY" | sed -z 's/\n/%0A/g')
+        RELEASE_BODY=$(echo "$RELEASE_BODY" | sed -z 's/\r/%0D/g')
         echo "changelog=${RELEASE_BODY}" >>"$GITHUB_OUTPUT"
         RELEASE_DATA=$(echo "${RELEASE_DATA}" | jq --arg body "${RELEASE_BODY}" '.body = $body')
       else
@@ -123,9 +123,11 @@ if [ "$HTTP_STATUS" -eq 200 ]; then
 
     if [ "$HTTP_STATUS" -eq 200 ]; then
       echo "::notice::Release updated"
-      echo "id=$(echo "$CONTENT" | jq ".id")" >>"$GITHUB_OUTPUT"
-      echo "html_url=$(echo "$CONTENT" | jq ".html_url")" >>"$GITHUB_OUTPUT"
-      echo "upload_url=$(echo "$CONTENT" | jq ".upload_url")" >>"$GITHUB_OUTPUT"
+      {
+        echo "id=$(echo "$CONTENT" | jq ".id")"
+        echo "html_url=$(echo "$CONTENT" | jq ".html_url")"
+        echo "upload_url=$(echo "$CONTENT" | jq ".upload_url")"
+      } >>"$GITHUB_OUTPUT"
     else
       echo "::error::Failed to update release ($HTTP_STATUS):"
       echo "$CONTENT" | jq ".errors"
@@ -152,9 +154,11 @@ else
 
   if [ "$HTTP_STATUS" -eq 201 ]; then
     echo "::notice::Release successfully created"
-    echo "id=$(echo "$CONTENT" | jq ".id")" >>"$GITHUB_OUTPUT"
-    echo "html_url=$(echo "$CONTENT" | jq ".html_url")" >>"$GITHUB_OUTPUT"
-    echo "upload_url=$(echo "$CONTENT" | jq ".upload_url")" >>"$GITHUB_OUTPUT"
+    {
+      echo "id=$(echo "$CONTENT" | jq ".id")"
+      echo "html_url=$(echo "$CONTENT" | jq ".html_url")"
+      echo "upload_url=$(echo "$CONTENT" | jq ".upload_url")"
+    } >>"$GITHUB_OUTPUT"
   else
     echo "::error::Failed to update release ($HTTP_STATUS):"
     echo "$CONTENT" | jq ".errors"
