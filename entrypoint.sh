@@ -46,7 +46,10 @@ create_release_data() {
       RELEASE_BODY=$(submark -O --"$INPUT_CHANGELOG_HEADING" "$TAG" "$INPUT_CHANGELOG_FILE")
       if [ -n "${RELEASE_BODY}" ]; then
         echo "::notice::Changelog entry found, adding to release"
-        echo "::set-output name=changelog::${RELEASE_BODY}"
+        RELEASE_BODY="${RELEASE_BODY//'%'/'%25'}"
+        RELEASE_BODY="${RELEASE_BODY//$'\n'/'%0A'}"
+        RELEASE_BODY="${RELEASE_BODY//$'\r'/'%0D'}"
+        echo "changelog=${RELEASE_BODY}" >>"$GITHUB_OUTPUT"
         RELEASE_DATA=$(echo "${RELEASE_DATA}" | jq --arg body "${RELEASE_BODY}" '.body = $body')
       else
         echo "::warning::Changelog entry not found!"
@@ -120,9 +123,9 @@ if [ "$HTTP_STATUS" -eq 200 ]; then
 
     if [ "$HTTP_STATUS" -eq 200 ]; then
       echo "::notice::Release updated"
-      echo "::set-output name=id::$(echo "$CONTENT" | jq ".id")"
-      echo "::set-output name=html_url::$(echo "$CONTENT" | jq ".html_url")"
-      echo "::set-output name=upload_url::$(echo "$CONTENT" | jq ".upload_url")"
+      echo "id=$(echo "$CONTENT" | jq ".id")" >>"$GITHUB_OUTPUT"
+      echo "html_url=$(echo "$CONTENT" | jq ".html_url")" >>"$GITHUB_OUTPUT"
+      echo "upload_url=$(echo "$CONTENT" | jq ".upload_url")" >>"$GITHUB_OUTPUT"
     else
       echo "::error::Failed to update release ($HTTP_STATUS):"
       echo "$CONTENT" | jq ".errors"
@@ -149,9 +152,9 @@ else
 
   if [ "$HTTP_STATUS" -eq 201 ]; then
     echo "::notice::Release successfully created"
-    echo "::set-output name=id::$(echo "$CONTENT" | jq ".id")"
-    echo "::set-output name=html_url::$(echo "$CONTENT" | jq ".html_url")"
-    echo "::set-output name=upload_url::$(echo "$CONTENT" | jq ".upload_url")"
+    echo "id=$(echo "$CONTENT" | jq ".id")" >>"$GITHUB_OUTPUT"
+    echo "html_url=$(echo "$CONTENT" | jq ".html_url")" >>"$GITHUB_OUTPUT"
+    echo "upload_url=$(echo "$CONTENT" | jq ".upload_url")" >>"$GITHUB_OUTPUT"
   else
     echo "::error::Failed to update release ($HTTP_STATUS):"
     echo "$CONTENT" | jq ".errors"
