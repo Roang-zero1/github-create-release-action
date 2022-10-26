@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## v2.3.4
+
+- Remove dependency pinning
+
 ## v2.3.3
 
 - Update curl to latest version
