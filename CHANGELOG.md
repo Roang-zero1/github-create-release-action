@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## v3.0.1
+
+- Fix `sed` replacement in alpine
+- Fix linting errors
+
 ## v3.0.0
 
 Update to new GitHub actions output format
